@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import * as seisplotjs from 'seisplotjs';
 import { Paper, Typography } from '@mui/material'
 import { RowSection2 } from './RowSection2';
+import { useSelector } from 'react-redux';
 
 const styleSection2 = {
     backgroundColor: '#253e5d',
@@ -15,7 +16,10 @@ const styleTypography = {
     fontWeight: 'bold',
 }
 
-export const Section2 = ({ seismogramDataSection2, setStationForSection1 }) => {
+export const Section2 = () => {
+
+//Redux
+const {seismogramDataSection2} = useSelector( (state) => state.graphic )
 
     return (
         <>
@@ -28,7 +32,6 @@ export const Section2 = ({ seismogramDataSection2, setStationForSection1 }) => {
                         return <RowSection2
                             key={seismogram.channel.station.stationCode}
                             seismogram={seismogram}
-                            setStationForSection1={setStationForSection1}
                         />
                     })
                 }

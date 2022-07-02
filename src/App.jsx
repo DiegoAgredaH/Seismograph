@@ -1,8 +1,8 @@
 import React from 'react'
-import { Grafics } from './components/Grafics'
+import { Graphics } from './components/Graphics'
 
 export const App = () => {
   return (
-    <Grafics />
+    <Graphics />
   )
 }
