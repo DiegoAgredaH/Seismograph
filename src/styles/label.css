@@ -1,0 +1,18 @@
+.label {
+    padding: 0;
+    padding-top: 0.4em;
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    left: 0;
+    width: 10em;
+    bottom: 0;
+    text-align: center;
+    height: 25px;
+    color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #008a8b;
+}
