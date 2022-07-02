@@ -89,7 +89,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-export const Template = ({ stationForSection1, seismogramDataSection1, seismogramDataSection2, setStationForSection1 }) => {
+export const Template = () => {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
@@ -202,15 +202,9 @@ export const Template = ({ stationForSection1, seismogramDataSection1, seismogra
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
 
-                <Section1
-                    stationForSection1={stationForSection1}
-                    seismogramDataSection1={seismogramDataSection1}
-                />
+                <Section1/>
                 <br />
-                <Section2
-                    seismogramDataSection2={seismogramDataSection2}
-                    setStationForSection1={setStationForSection1}
-                />
+                <Section2/>
             </Box>
         </Box>
     );

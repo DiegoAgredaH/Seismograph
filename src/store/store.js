@@ -2,8 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import { graphicSlice } from './slices/graphics'
 
 
+
 export const store = configureStore({
-  reducer: {
-    graphic: graphicSlice.reducer,
-  },
+    reducer: {
+        graphic: graphicSlice.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 })
+

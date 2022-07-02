@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import * as seisplotjs from 'seisplotjs';
+import { useSelector } from 'react-redux';
 
-export const Section1 = ({stationForSection1, seismogramDataSection1}) => {
+export const Section1 = () => {
+
+    const { seismogramDataSection1 } = useSelector((state) => state.graphic)
 
     useEffect(() => {
         if (seismogramDataSection1.length !== 0) {
