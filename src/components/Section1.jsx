@@ -22,16 +22,13 @@ export const Section1 = ({stationForSection1, seismogramDataSection1}) => {
             seisConfig.title = 'Station: ' + sdd.stationCode + ' Channel: ' + sdd.channelCode
             seisConfig.isXAxis = false;
             seisConfig.xLabel = " ";
-            // div = seisplotjs.d3.select('div#myseismograph');
             if (sdd.channelCode == "LHE") {
                 seisConfig.lineColors = ["orange"]
             }
             else if (sdd.channelCode == "LHN") {
-                // div = seisplotjs.d3.select('div#myseismograph');
                 seisConfig.lineColors = ["olivedrab"]
             }
             else if (sdd.channelCode == "LHZ") {
-                // div = seisplotjs.d3.select('div#myseismograph');
                 seisConfig.lineColors = ["darkcyan"]
                 seisConfig.isXAxis = true;
                 seisConfig.xLabel = "Time";
@@ -39,7 +36,6 @@ export const Section1 = ({stationForSection1, seismogramDataSection1}) => {
             seisConfig.wheelZoom = true;
             seisConfig.isYAxis = true;
             seisConfig.windowAmp = false;
-            // if (sdd.channel.station.stationCode === nameStation) {
             graph = new seisplotjs.seismograph.Seismograph(div,
                 seisConfig,
                 sdd);

@@ -53,25 +53,6 @@ export const Grafics = () => {
         } catch (error) {
             console.error(`Error loading data. -> ${error}`);
         }
-
-        // Promise.all([stationQuery.queryChannels()])
-        //     .then(([networks]) => {
-        //         let allChannels = Array.from(seisplotjs.stationxml.allChannels(networks));
-        //         let timeWindow = new seisplotjs.util.StartEndDuration('2020-03-05T14:21:59Z', null, 1800);
-        //         let seismogramDataList = allChannels.map(c => {
-        //             let sdd = seisplotjs.seismogram.SeismogramDisplayData.fromChannelAndTimeWindow(c, timeWindow);
-        //             return sdd;
-        //         });
-        //         let dsQuery = new seisplotjs.fdsndataselect.DataSelectQuery();
-        //         return Promise.all([dsQuery.postQuerySeismograms(seismogramDataList)]);
-        //     }).then(([seismogramDataList]) => {
-        //         setSeismogramData(seismogramDataList)
-        //         // setSeismogramDataFiltered(...seismogramDataList)
-        //     }).catch(function (error) {
-        //         seisplotjs.d3.select("div#myseismograph").append('p').html("Error loading data." + error);
-        //         console.assert(false, error);
-        //     });
-
     }
 
     const dataForSection1 = () => {
