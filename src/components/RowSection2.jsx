@@ -18,12 +18,14 @@ export const RowSection2 = ({ seismogram }) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        document.getElementById(`myseismograph${seismogram.channel.station.stationCode}`).innerHTML = "";
         plotSection2()
     }, [seismogram])
 
     const plotSection2 = () => {
         let div = seisplotjs.d3.select(`div#myseismograph${seismogram.channel.station.stationCode}`);
         let seisConfig = new seisplotjs.seismographconfig.SeismographConfig();
+        seisConfig.doGain = false;
         seisConfig.isXAxis = false;
         seisConfig.isYAxis = false;
         seisConfig.xLabel = "";

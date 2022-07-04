@@ -22,16 +22,17 @@ export const Section1 = () => {
         // const ampLinker = new seisplotjs.seismograph.LinkedAmpScale();
         seismogramDataSection1.forEach(sdd => {
             let seisConfig = new seisplotjs.seismographconfig.SeismographConfig();
+            seisConfig.doGain = false;
             seisConfig.title = 'Station: ' + sdd.stationCode + ' Channel: ' + sdd.channelCode
             seisConfig.isXAxis = false;
             seisConfig.xLabel = " ";
-            if (sdd.channelCode == "LHE") {
+            if (sdd.channelCode == "HHE") {
                 seisConfig.lineColors = ["orange"]
             }
-            else if (sdd.channelCode == "LHN") {
+            else if (sdd.channelCode == "HHN") {
                 seisConfig.lineColors = ["olivedrab"]
             }
-            else if (sdd.channelCode == "LHZ") {
+            else if (sdd.channelCode == "HHZ") {
                 seisConfig.lineColors = ["darkcyan"]
                 seisConfig.isXAxis = true;
                 seisConfig.xLabel = "Time";
