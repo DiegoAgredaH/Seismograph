@@ -19,6 +19,11 @@ import ListItemText from '@mui/material/ListItemText';
 import { useState, useEffect } from 'react';
 import { Section1 } from './Section1';
 import { Section2 } from './Section2';
+import { useSelector, useDispatch } from 'react-redux';
+import { getBandForFilters, getHZForFilters } from '../store/slices/filters';
+import * as seisplotjs from 'seisplotjs';
+import { setSeismogramDataForFilters } from '../store/slices/graphics';
+import _ from 'lodash'
 
 const drawerWidth = 240;
 const bandTypes = ['BAND_PASS', 'LOW_PASS', 'HIGH_PASS'];
@@ -90,12 +95,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export const Template = () => {
+
+    //Redux
+    const { filterBand, filterHz } = useSelector((state) => state.filter)
+    const { seismogramData } = useSelector((state) => state.graphic)
+    const dispatch = useDispatch()
+
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-
-    // data for the filters
-    const [filterBand, setFilterBand] = useState('');
-    const [filterHz, setFilterHz] = useState('');
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -106,9 +113,40 @@ export const Template = () => {
     };
 
     useEffect(() => {
-        console.log('filterBand -> ', filterBand)
-        console.log('filterHz -> ', filterHz)
+        filterBand !== '' && Object.keys(filterHz).length
+            ? applyFilters()
+            : dispatch(setSeismogramDataForFilters({ seismogramDataForFilters: seismogramData }))
     }, [filterBand, filterHz])
+
+    const handleStateOfFilters = (index) => {
+        dispatch(getHZForFilters({ filterHz: index }))
+        index === 0 && dispatch(getBandForFilters({ band: '' }))
+    }
+
+    const applyFilters = () => {
+        const arrayFilteredSeismograms = _.cloneDeep(seismogramData)
+        const typeFilter =
+            filterBand === 'BAND_PASS' ? seisplotjs.filter.BAND_PASS
+                : filterBand === 'LOW_PASS' ? seisplotjs.filter.LOW_PASS
+                    : filterBand === 'HIGH_PASS' && seisplotjs.filter.HIGH_PASS
+        arrayFilteredSeismograms.forEach(sdd => {
+            let butterworth = null;
+            butterworth = seisplotjs.filter.createButterworth(
+                2, // poles
+                typeFilter,
+                filterHz.lowCorner, // low corner
+                filterHz.highCorner, // high corner
+                1 / sdd.seismogram.sampleRate // delta (period)
+            );
+            let rmeanSeis = seisplotjs.filter.rMean(sdd.seismogram);
+            let filteredSeis = seisplotjs.filter.applyFilter(butterworth, rmeanSeis);
+            let taperSeis = seisplotjs.taper.taper(filteredSeis);
+            let correctedSeis = seisplotjs.transfer.transfer(taperSeis,
+                sdd.channel.response, .001, .02, 250, 500);
+            sdd.seismogram = correctedSeis;
+        })
+        dispatch(setSeismogramDataForFilters({ seismogramDataForFilters: arrayFilteredSeismograms }))
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -152,7 +190,7 @@ export const Template = () => {
                                     px: 2.5,
                                 }}
 
-                                onClick={() => setFilterBand(text)}
+                                onClick={() => dispatch(getBandForFilters({ band: text }))}
                             >
                                 <ListItemIcon
                                     sx={{
@@ -181,7 +219,7 @@ export const Template = () => {
                                     px: 2.5,
                                 }}
 
-                                onClick={() => setFilterHz(index)}
+                                onClick={() => handleStateOfFilters(index)}
                             >
                                 <ListItemIcon
                                     sx={{
@@ -202,9 +240,9 @@ export const Template = () => {
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
 
-                <Section1/>
+                <Section1 />
                 <br />
-                <Section2/>
+                <Section2 />
             </Box>
         </Box>
     );
