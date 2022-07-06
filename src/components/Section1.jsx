@@ -1,10 +1,23 @@
 import React, { useEffect } from 'react'
 import * as seisplotjs from 'seisplotjs';
 import { useSelector } from 'react-redux';
+import { Paper, Typography } from '@mui/material';
+
+const styleSection2 = {
+    backgroundColor: '#253e5d',
+    borderRadius: '10px',
+}
+
+const styleTypography = {
+    backgroundColor: '#253e5d',
+    borderRadius: '10px',
+    color: '#326997',
+    fontWeight: 'bold',
+}
 
 export const Section1 = () => {
 
-    const { seismogramDataSection1 } = useSelector((state) => state.graphic)
+    const { seismogramDataSection1, stationForSection1 } = useSelector((state) => state.graphic)
 
     useEffect(() => {
         if (seismogramDataSection1.length !== 0) {
@@ -23,7 +36,7 @@ export const Section1 = () => {
         seismogramDataSection1.forEach(sdd => {
             let seisConfig = new seisplotjs.seismographconfig.SeismographConfig();
             seisConfig.doGain = false;
-            seisConfig.title = 'Station: ' + sdd.stationCode + ' Channel: ' + sdd.channelCode
+            seisConfig.title = sdd.channelCode
             seisConfig.isXAxis = false;
             seisConfig.xLabel = " ";
             if (sdd.channelCode == "HHE") {
@@ -53,11 +66,16 @@ export const Section1 = () => {
 
     return (
         <>
-            <div className='section1 animate__animated animate__slideInLeft'>
-                <br />
-                <div className='myseismograph' id="myseismograph">
+            <Paper style={styleSection2} elevation={5} className="animate__animated animate__slideInLeft">
+                <Typography style={styleTypography} align='center' variant='h6'>
+                    Estacion: {stationForSection1}
+                </Typography>
+                <div className='section1 animate__animated animate__slideInLeft'>
+                    <br />
+                    <div className='myseismograph' id="myseismograph">
+                    </div>
                 </div>
-            </div>
+            </Paper>
         </>
     )
 }

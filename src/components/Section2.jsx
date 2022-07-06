@@ -25,7 +25,7 @@ const {seismogramDataSection2} = useSelector( (state) => state.graphic )
         <>
             <Paper style={styleSection2} elevation={5} className="animate__animated animate__slideInLeft">
                 <Typography style={styleTypography} align='center' variant='h6'>
-                    Estaciones
+                    Listado de estaciones
                 </Typography>
                 {
                     seismogramDataSection2.map(seismogram => {

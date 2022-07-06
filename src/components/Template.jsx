@@ -104,6 +104,9 @@ export const Template = () => {
     const theme = useTheme();
     const [open, setOpen] = useState(false);
 
+    const [indexBand, setIndexBand] = useState(null);
+    const [indexHz, setindexHz] = useState(0)
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -118,10 +121,19 @@ export const Template = () => {
             : dispatch(setSeismogramDataForFilters({ seismogramDataForFilters: seismogramData }))
     }, [filterBand, filterHz])
 
-    const handleStateOfFilters = (index) => {
+    const handleStateOfFiltersBand = (text, index) => {
+        dispatch(getBandForFilters({ band: text }))
+        setIndexBand(index)
+        indexHz === 0 && setindexHz(null)
+    }
+
+    const handleStateOfFiltersHZ = (index) => {
         dispatch(getHZForFilters({ filterHz: index }))
         index === 0 && dispatch(getBandForFilters({ band: '' }))
+        index === 0 && setIndexBand(null)
+        setindexHz(index)
     }
+
 
     const applyFilters = () => {
         const arrayFilteredSeismograms = _.cloneDeep(seismogramData)
@@ -134,8 +146,8 @@ export const Template = () => {
             butterworth = seisplotjs.filter.createButterworth(
                 2, // poles
                 typeFilter,
-                filterHz.lowCorner, // low corner
-                filterHz.highCorner, // high corner
+                filterHz.lowCorner,
+                filterHz.highCorner,
                 1 / sdd.seismogram.sampleRate // delta (period)
             );
             let rmeanSeis = seisplotjs.filter.rMean(sdd.seismogram);
@@ -181,8 +193,22 @@ export const Template = () => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {bandTypes.map((text) => (
-                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                    {typesFilterHz.map((text, index) => (
+                        <ListItem key={text} disablePadding sx={{
+                            display: 'flex',
+                            listStyle: 'none',
+                            position: 'relative',
+                            width: '100%',
+                            height: '60px',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            padding: '0 10px',
+                            cursor: 'pointer',
+                            transition: '0.5s',
+                            textDecoration: 'none',
+                            textAlign: 'center',
+                            transform: `${index === indexHz ? 'translateX(10px)' : 'none'}`,
+                        }}>
                             <ListItemButton
                                 sx={{
                                     minHeight: 48,
@@ -190,28 +216,56 @@ export const Template = () => {
                                     px: 2.5,
                                 }}
 
-                                onClick={() => dispatch(getBandForFilters({ band: text }))}
+                                onClick={() => handleStateOfFiltersHZ(index)}
                             >
                                 <ListItemIcon
                                     sx={{
-                                        minWidth: 0,
                                         mr: open ? 3 : 'auto',
+                                        position: 'relative',
                                         justifyContent: 'center',
+                                        display: 'block',
+                                        minWidth: '30px',
+                                        height: '35px',
+                                        lineHeight: '30px',
+                                        padding: '5px',
+                                        color: 'black',
+                                        borderRadius: '10px',
+                                        fontSize: ' 1.75em',
+                                        transition: '0.5s',
+                                        backgroundColor: `${index === indexHz ? text === 'Normal' ? '#0fc70f' : '#ffa117' : 'white'}`,
+                                        opacity: `${index === indexHz ? 'none' : '0.5'}`,
                                     }}
                                 >
-                                    {text === 'BAND_PASS' && <div>BP</div>}
-                                    {text === 'LOW_PASS' && <div>LP</div>}
-                                    {text === 'HIGH_PASS' && <div>HP</div>}
+                                    {index === 0 && <ion-icon name="repeat"></ion-icon>}
+                                    {index === 1 && <ion-icon name="pulse"></ion-icon>}
+                                    {index === 2 && <ion-icon name="thermometer"></ion-icon>}
+                                    {index === 3 && <ion-icon name="subway"></ion-icon>}
+                                    {index === 4 && <ion-icon name="thunderstorm"></ion-icon>}
                                 </ListItemIcon>
-                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                                <ListItemText primary={text} sx={{
+                                    opacity: open ? 1 : 0,
+                                    color: `${index === indexHz ? text === 'Normal' ? '#0fc70f' : '#ffa117' : 'black'}`
+                                }} />
                             </ListItemButton>
                         </ListItem>
                     ))}
                 </List>
                 <Divider />
                 <List>
-                    {typesFilterHz.map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                    {bandTypes.map((text, index) => (
+                        <ListItem key={text} disablePadding sx={{
+                            display: 'block',
+                            listStyle: 'none',
+                            position: 'relative',
+                            width: '100%',
+                            height: '60px',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            padding: '0 10px',
+                            cursor: 'pointer',
+                            transition: '0.5s',
+                            transform: `${index === indexBand ? 'translateX(10px)' : 'none'}`,
+                        }}>
                             <ListItemButton
                                 sx={{
                                     minHeight: 48,
@@ -219,23 +273,39 @@ export const Template = () => {
                                     px: 2.5,
                                 }}
 
-                                onClick={() => handleStateOfFilters(index)}
+                                onClick={() => handleStateOfFiltersBand(text, index)}
                             >
                                 <ListItemIcon
                                     sx={{
-                                        minWidth: 0,
                                         mr: open ? 3 : 'auto',
+                                        position: 'relative',
                                         justifyContent: 'center',
-                                        color: 'black'
+                                        display: 'block',
+                                        minWidth: '30px',
+                                        height: '35px',
+                                        lineHeight: '30px',
+                                        padding: '5px',
+                                        color: 'black',
+                                        borderRadius: '10px',
+                                        fontSize: ' 1.75em',
+                                        transition: '0.5s',
+                                        backgroundColor: `${index === indexBand ? '#2196f3' : 'white'}`,
+                                        opacity: `${index === indexBand ? 'none' : '0.5'}`,
                                     }}
                                 >
-                                    <ListItemText primary={text} />
+                                    {text === 'BAND_PASS' && <ion-icon name="earth"></ion-icon>}
+                                    {text === 'LOW_PASS' && <ion-icon name="flame"></ion-icon>}
+                                    {text === 'HIGH_PASS' && <ion-icon name="flask"></ion-icon>}
                                 </ListItemIcon>
-                                {/* <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} /> */}
+                                <ListItemText primary={text} sx={{
+                                    opacity: open ? 1 : 0,
+                                    color: `${index === indexBand ? '#2196f3' : 'black'}`
+                                }} />
                             </ListItemButton>
                         </ListItem>
                     ))}
                 </List>
+
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
@@ -244,6 +314,7 @@ export const Template = () => {
                 <br />
                 <Section2 />
             </Box>
-        </Box>
+        </Box >
     );
 }
+
